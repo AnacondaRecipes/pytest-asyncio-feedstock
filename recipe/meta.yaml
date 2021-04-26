@@ -11,9 +11,11 @@ source:
   sha256: 2564ceb9612bbd560d19ca4b41347b54e7835c2f792c504f698e05395ed63f6f
 
 build:
-  number: 1
+  number: 0
   skip: true  # [py2k]
   script: {{ PYTHON }} -m pip install . --no-deps -vv
+  entry_points:
+    - asyncio = pytest_asyncio.plugin
 
 requirements:
   host:
@@ -21,7 +23,7 @@ requirements:
     - pip
   run:
     - python >=3.6
-    - pytest >=5.4
+    - pytest >=5.4.0
 
 test:
   imports:
