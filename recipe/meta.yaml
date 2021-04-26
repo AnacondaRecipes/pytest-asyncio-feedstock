@@ -14,8 +14,6 @@ build:
   number: 0
   skip: true  # [py2k]
   script: {{ PYTHON }} -m pip install . --no-deps -vv
-  entry_points:
-    - asyncio = pytest_asyncio.plugin
 
 requirements:
   host:
