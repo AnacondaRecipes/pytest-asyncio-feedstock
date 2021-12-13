@@ -1,5 +1,5 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "0.15.1" %}
+{% set version = "0.16.0" %}
 
 package:
   name: {{ name|lower }}
@@ -8,17 +8,19 @@ package:
 source:
   fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 2564ceb9612bbd560d19ca4b41347b54e7835c2f792c504f698e05395ed63f6f
+  sha256: 7496c5977ce88c34379df64a66459fe395cd05543f0a2f837016e7144391fcfb
 
 build:
   number: 0
-  skip: true  # [py2k]
+  skip: true  # [py<36]
   script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
   host:
     - python
     - pip
+    - setuptools
+    - wheel
   run:
     - python
     - pytest >=5.4.0
@@ -26,14 +28,19 @@ requirements:
 test:
   imports:
     - pytest_asyncio
+  requires:
+    - pip
+  commands:
+    - pip check
 
 about:
   home: http://github.com/pytest-dev/pytest-asyncio
   license: Apache-2.0
+  license_family: Apache
   license_file: LICENSE
   #license_file: LICENSE # License file is missing in package
   summary: Pytest support for asyncio
-
+  doc_url: https://github.com/pytest-dev/pytest-asyncio/blob/master/README.rst
   dev_url: https://github.com/pytest-dev/pytest-asyncio
 
 extra:
