@@ -1,5 +1,5 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "0.16.0" %}
+{% set version = "0.18.1" %}
 
 package:
   name: {{ name|lower }}
@@ -8,7 +8,7 @@ package:
 source:
   fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 7496c5977ce88c34379df64a66459fe395cd05543f0a2f837016e7144391fcfb
+  sha256: c43fcdfea2335dd82ffe0f2774e40285ddfea78a8e81e56118d47b6a90fbb09e
 
 build:
   number: 0
