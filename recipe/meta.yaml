@@ -1,44 +1,57 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "0.16.0" %}
+{% set version = "0.18.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 7496c5977ce88c34379df64a66459fe395cd05543f0a2f837016e7144391fcfb
+  - folder: dist
+    url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+    sha256: fc8e4190f33fee7797cc7f1829f46a82c213f088af5d1bb5d4e454fe87e6cdc2
+  - folder: src
+    url: https://github.com/pytest-dev/pytest-asyncio/archive/refs/tags/v{{ version }}.tar.gz
+    sha256: bbeb4dc968bcef0c69d2467634e5bd86158df819f705a78358cc39f817260d4b
 
 build:
   number: 0
-  skip: true  # [py<36]
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  noarch: python
+  script: cd dist && {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
   host:
     - python
     - pip
-    - setuptools
-    - wheel
+    - setuptools >=51.0
+    - setuptools_scm >=6.2
+    - toml
+    - wheel >=0.36
   run:
-    - python
+    - python >=3.7
     - pytest >=5.4.0
+    - typing_extensions >=3.7.2
 
 test:
+  source_files:
+    - src/tests
   imports:
     - pytest_asyncio
   requires:
     - pip
+    - coverage
+    - hypothesis >=5.7.1
   commands:
     - pip check
+    - cd src
+    # the skip is for docker network issues in CI, reduces coverage from 96
+    - coverage run -m pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline)'
+    - coverage report --fail-under 91
 
 about:
-  home: http://github.com/pytest-dev/pytest-asyncio
+  home: https://github.com/pytest-dev/pytest-asyncio
   license: Apache-2.0
   license_family: Apache
-  license_file: LICENSE
-  #license_file: LICENSE # License file is missing in package
+  license_file: dist/LICENSE
   summary: Pytest support for asyncio
   doc_url: https://github.com/pytest-dev/pytest-asyncio/blob/master/README.rst
   dev_url: https://github.com/pytest-dev/pytest-asyncio
