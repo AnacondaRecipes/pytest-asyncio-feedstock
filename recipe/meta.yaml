@@ -29,7 +29,7 @@ requirements:
   run:
     - python
     - pytest >=6.1.0
-    - typing_extensions >=3.7.2
+    - typing_extensions >=3.7.2  # [py<38]
 
 test:
   source_files:
