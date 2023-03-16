@@ -49,7 +49,7 @@ test:
     - coverage run -m pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)'  # [not win]
     # 2023/3/16: Skip test on win because of an error 'pytest.PytestDeprecationWarning: @pytest.yield_fixture is deprecated'.
     #- coverage run -m pytest -vv  # [win]
-    - coverage report --fail-under 91
+    - coverage report --fail-under 91  # [not win]
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
