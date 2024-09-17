@@ -25,6 +25,7 @@ requirements:
     - pip
     - python >=3.8
     - setuptools-scm >=6.2
+    - wheel
   run:
     - pytest >=8.2,<9
     - python >=3.8
@@ -48,9 +49,11 @@ test:
     - coverage report --fail-under=91
 
 about:
-  home: http://github.com/pytest-dev/pytest-asyncio
+  home: https://github.com/pytest-dev/pytest-asyncio
   license: Apache-2.0
   license_file: dist/LICENSE
+  license_family: Apache-2.0
+  doc_url: https://github.com/pytest-dev/pytest-asyncio
   summary: Pytest support for asyncio
   dev_url: https://github.com/pytest-dev/pytest-asyncio
 
