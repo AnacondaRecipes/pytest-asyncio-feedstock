@@ -50,9 +50,10 @@ test:
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
+  description: "pytest-asyncio is a pytest plugin. It facilitates testing of code that uses the asyncio library."
   license: Apache-2.0
   license_file: dist/LICENSE
-  license_family: Apache-2.0
+  license_family: Apache
   doc_url: https://github.com/pytest-dev/pytest-asyncio
   summary: Pytest support for asyncio
   dev_url: https://github.com/pytest-dev/pytest-asyncio
