@@ -17,6 +17,9 @@ build:
   script: cd dist && {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   noarch: python
 
+  # noarch builds need to only be built on linux64
+  skip: True  # [not linux64]
+
 requirements:
   host:
     - pip
