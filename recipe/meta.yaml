@@ -1,35 +1,34 @@
-{% set name = "pytest-asyncio" %}
-{% set version = "0.20.3" %}
+{% set version = "0.24.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: pytest-asyncio
   version: {{ version }}
 
 source:
   - folder: dist
-    url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-    sha256: 83cbf01169ce3e8eb71c6c278ccb0574d1a7a3bb8eaaf5e50e0ad342afb33b36
+    url: https://pypi.io/packages/source/p/pytest-asyncio/pytest_asyncio-{{ version }}.tar.gz
+    sha256: d081d828e576d85f875399194281e92bf8a68d60d72d1a2faf2feddb6c46b276
   - folder: src
     url: https://github.com/pytest-dev/pytest-asyncio/archive/refs/tags/v{{ version }}.tar.gz
-    sha256: 71167da362a2c1ab22a048463eb2954b7f15fba18d41eee6a3b9db03863a2580
+    sha256: e770d3d3de20968d03a556c8f2ebe461c568d283a993f4a1179ddd02e5f633a6
 
 build:
   number: 0
-  skip: true  # [py<37]
-  script: cd dist && {{ PYTHON }} -m pip install . --no-deps -vv
+  script: cd dist && {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  noarch: python
+
+  # noarch builds need to only be built on linux64
+  skip: True  # [not linux64]
 
 requirements:
   host:
-    - python
     - pip
-    - setuptools
-    - setuptools_scm
-    - toml
+    - python >=3.8
+    - setuptools-scm >=6.2
     - wheel
   run:
-    - python
-    - pytest >=6.1.0
-    - typing_extensions >=3.7.2  # [py<38]
+    - pytest >=8.2,<9
+    - python >=3.8
 
 test:
   source_files:
@@ -41,28 +40,31 @@ test:
     - pip
     - coverage
     - hypothesis >=5.7.1
-    # TODO: add pytest-trio to defaults: test_strict_mode_ignores_trio_fixtures.py requires it
+    - pytest-trio
   commands:
     - pip check
     - cd src
     # the skip is for docker network issues in CI, reduces coverage from 96
-    - coverage run -m pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)'  # [not win]
-    # 2023/3/16: Skip test on win because of an error 'pytest.PytestDeprecationWarning: @pytest.yield_fixture is deprecated'.
-    #- coverage run -m pytest -vv  # [win]
-    - coverage report --fail-under 91  # [not win]
+    - coverage run --branch -m pytest -vv --color=yes --tb=long -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline)'
+    - coverage report --fail-under=91
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
+  description: "pytest-asyncio is a pytest plugin. It facilitates testing of code that uses the asyncio library."
   license: Apache-2.0
-  license_family: Apache
   license_file: dist/LICENSE
+  license_family: Apache
+  doc_url: https://github.com/pytest-dev/pytest-asyncio
   summary: Pytest support for asyncio
-  description: |
-    pytest-asyncio is a pytest plugin. 
-    It facilitates testing of code that uses the asyncio library.
-  doc_url: https://github.com/pytest-dev/pytest-asyncio/blob/master/README.rst
   dev_url: https://github.com/pytest-dev/pytest-asyncio
 
 extra:
+  skip-lints:
+    - avoid_noarch    # Only if building a noarch package
+  anaconda-services:
+    recipe-maintainers:
+       - bkreider
+    comment: "Dependency for deepeval requested from https://anaconda.zendesk.com/agent/tickets/53943"
   recipe-maintainers:
     - sodre
+    - bollwyvl
