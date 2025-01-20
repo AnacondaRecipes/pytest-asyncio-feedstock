@@ -6,17 +6,13 @@ package:
   version: {{ version }}
 
 source:
-  - folder: dist
-    url: https://pypi.io/packages/source/{{ name[0] }}/{{ name.replace("-", "_") }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
-    sha256: 759b10b33a6dc61cce40a8bd5205e302978bbbcc00e279a8b61d9a6a3c82e4d3
-  - folder: src
-    url: https://github.com/pytest-dev/pytest-asyncio/archive/refs/tags/v{{ version }}.tar.gz
-    sha256: 8eea050580f4bf664918acc03191ea0cabc0eebc26691ab2370a6691637f5878
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name.replace("-", "_") }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
+  sha256: 759b10b33a6dc61cce40a8bd5205e302978bbbcc00e279a8b61d9a6a3c82e4d3
 
 build:
   number: 0
   skip: true  # [py<38]
-  script: cd dist && {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   host:
@@ -32,24 +28,22 @@ requirements:
 
 test:
   source_files:
-    - src/tests
-    - src/setup.cfg
+    - tests
+    - setup.cfg
   imports:
     - pytest_asyncio
   requires:
     - pip
-    - coverage
     - hypothesis >=5.7.1
   commands:
     - pip check
-    - cd src
     - pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)'
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
   license: Apache-2.0
   license_family: Apache
-  license_file: dist/LICENSE
+  license_file: LICENSE
   summary: Pytest support for asyncio
   description: |
     pytest-asyncio is a pytest plugin.
