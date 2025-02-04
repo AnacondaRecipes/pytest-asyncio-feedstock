@@ -29,7 +29,7 @@ requirements:
 test:
   source_files:
     - tests
-    - setup.cfg
+    - pyproject.toml
   imports:
     - pytest_asyncio
   requires:
