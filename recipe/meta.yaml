@@ -1,5 +1,5 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "0.23.8" %}
+{% set version = "0.25.3" %}
 
 package:
   name: {{ name|lower }}
@@ -7,11 +7,11 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name.replace("-", "_") }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
-  sha256: 759b10b33a6dc61cce40a8bd5205e302978bbbcc00e279a8b61d9a6a3c82e4d3
+  sha256: fc1da2cf9f125ada7e710b4ddad05518d4cee187ae9412e9ac9271003497f07a
 
 build:
   number: 0
-  skip: true  # [py<38]
+  skip: true  # [py<39]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
@@ -24,12 +24,12 @@ requirements:
     - wheel
   run:
     - python
-    - pytest >=7,<9
+    - pytest >=8.2,<9
 
 test:
   source_files:
     - tests
-    - setup.cfg
+    - pyproject.toml
   imports:
     - pytest_asyncio
   requires:
