@@ -1,5 +1,5 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "0.25.3" %}
+{% set version = "0.26.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name.replace("-", "_") }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
-  sha256: fc1da2cf9f125ada7e710b4ddad05518d4cee187ae9412e9ac9271003497f07a
+  sha256: c4df2a697648241ff39e7f0e4a73050b03f123f760673956cf0d72a4990e312f
 
 build:
   number: 0
@@ -38,7 +38,7 @@ test:
   commands:
     - pip check
     # collected 0 tests on win
-    - pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)' # [not win]
+    - "pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)'"  # [not win]
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
