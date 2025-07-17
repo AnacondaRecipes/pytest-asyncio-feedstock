@@ -1,13 +1,13 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "0.25.3" %}
+{% set version = "1.1.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name.replace("-", "_") }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
-  sha256: fc1da2cf9f125ada7e710b4ddad05518d4cee187ae9412e9ac9271003497f07a
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name.replace("-", "_") }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
+  sha256: 796aa822981e01b68c12e4827b8697108f7205020f24b5793b3c41555dab68ea
 
 build:
   number: 0
@@ -18,13 +18,15 @@ requirements:
   host:
     - python
     - pip
-    - setuptools
+    - setuptools >=77
     - setuptools_scm
     - toml
-    - wheel
+    - setuptools-scm >=6.2
   run:
     - python
     - pytest >=8.2,<9
+    - backports-asyncio-runner >=1.1,<2  # [py<311]
+    - typing_extensions >=4.12  # [py<310]
 
 test:
   source_files:
@@ -38,7 +40,7 @@ test:
   commands:
     - pip check
     # collected 0 tests on win
-    - pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)' # [not win]
+    - pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)'  # [not win]
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
