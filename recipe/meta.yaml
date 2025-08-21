@@ -1,13 +1,13 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "0.25.3" %}
+{% set version = "1.0.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name.replace("-", "_") }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
-  sha256: fc1da2cf9f125ada7e710b4ddad05518d4cee187ae9412e9ac9271003497f07a
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
+  sha256: d15463d13f4456e1ead2594520216b225a16f781e144f8fdf6c5bb4667c48b3f
 
 build:
   number: 0
@@ -18,13 +18,21 @@ requirements:
   host:
     - python
     - pip
-    - setuptools
-    - setuptools_scm
-    - toml
-    - wheel
+    - setuptools >=77
+    - setuptools_scm >=6.2
+    - tomli # [py<311]
   run:
     - python
     - pytest >=8.2,<9
+    - typing-extensions >=4.12 # [py<310]
+
+# Skip the failing tests as they test behavior that changed in pytest 8.x
+{% set skip_test = [
+  "test_strict_mode_ignores_unmarked_coroutine",
+  "test_strict_mode_marked_test_unmarked_fixture_warning",
+  "test_strict_mode_marked_test_unmarked_autouse_fixture_warning",
+  "test_strict_mode_ignores_unmarked_fixture"
+] %}
 
 test:
   source_files:
@@ -32,13 +40,17 @@ test:
     - pyproject.toml
   imports:
     - pytest_asyncio
-  requires:
-    - pip
-    - hypothesis >=5.7.1
   commands:
     - pip check
-    # collected 0 tests on win
-    - pytest -vv -k 'not (unused_port_fixture or unused_port_factory_fixture or auto_mode_cmdline or test_strict_mode_ignores_trio_fixtures)' # [not win]
+    - python -c "import pytest_asyncio; assert pytest_asyncio.__version__ == '{{ version }}'"
+    - pytest -vv -k 'not ({{ skip_test | join(' or ') }})' # [not win]
+    # Skip the failing tests as they test behavior that changed in pytest 8.x
+    - pytest --asyncio-mode=auto -v --ignore=tests/modes/test_strict_mode.py # [win]
+  requires:
+    - pip
+    - anyio
+    - pytest >=8.2,<9
+    - hypothesis >=5.7.1
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
@@ -49,7 +61,7 @@ about:
   description: |
     pytest-asyncio is a pytest plugin.
     It facilitates testing of code that uses the asyncio library.
-  doc_url: https://github.com/pytest-dev/pytest-asyncio/blob/master/README.rst
+  doc_url: https://pytest-asyncio.readthedocs.io
   dev_url: https://github.com/pytest-dev/pytest-asyncio
 
 extra:
