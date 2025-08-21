@@ -20,7 +20,7 @@ requirements:
     - pip
     - setuptools >=77
     - setuptools_scm >=6.2
-    - toml
+    - tomli # [py<311]
   run:
     - python
     - pytest >=8.2,<9
@@ -38,7 +38,6 @@ test:
   source_files:
     - tests
     - pyproject.toml
-    - setup.cfg
   imports:
     - pytest_asyncio
   commands:
