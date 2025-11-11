@@ -1,5 +1,11 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "1.0.0" %}
+{% set version = "1.3.0" %}
+{% set skip_test = [
+  "test_strict_mode_ignores_unmarked_coroutine",
+  "test_strict_mode_marked_test_unmarked_fixture_warning",
+  "test_strict_mode_marked_test_unmarked_autouse_fixture_warning",
+  "test_strict_mode_ignores_unmarked_fixture"
+] %}
 
 package:
   name: {{ name|lower }}
@@ -7,11 +13,11 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
-  sha256: d15463d13f4456e1ead2594520216b225a16f781e144f8fdf6c5bb4667c48b3f
+  sha256: d7f52f36d231b80ee124cd216ffb19369aa168fc10095013c6b014a34d3ee9e5
 
 build:
   number: 0
-  skip: true  # [py<39]
+  skip: true  # [py<310]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
@@ -20,20 +26,16 @@ requirements:
     - pip
     - setuptools >=77
     - setuptools_scm >=6.2
-    - tomli # [py<311]
+    - tomli  # [py<311]
+    - setuptools-scm >=6.2
   run:
     - python
-    - pytest >=8.2,<9
-    - typing-extensions >=4.12 # [py<310]
+    - pytest >=8.2,<10
+    - typing-extensions >=4.12  # [py<310]
+    - backports-asyncio-runner >=1.1,<2  # [py<311]
+    - typing_extensions >=4.12  # [py<313]
 
 # Skip the failing tests as they test behavior that changed in pytest 8.x
-{% set skip_test = [
-  "test_strict_mode_ignores_unmarked_coroutine",
-  "test_strict_mode_marked_test_unmarked_fixture_warning",
-  "test_strict_mode_marked_test_unmarked_autouse_fixture_warning",
-  "test_strict_mode_ignores_unmarked_fixture"
-] %}
-
 test:
   source_files:
     - tests
@@ -43,9 +45,9 @@ test:
   commands:
     - pip check
     - python -c "import pytest_asyncio; assert pytest_asyncio.__version__ == '{{ version }}'"
-    - pytest -vv -k 'not ({{ skip_test | join(' or ') }})' # [not win]
+    - pytest -vv -k 'not ({{ skip_test | join(' or ') }})'  # [not win]
     # Skip the failing tests as they test behavior that changed in pytest 8.x
-    - pytest --asyncio-mode=auto -v --ignore=tests/modes/test_strict_mode.py # [win]
+    - pytest --asyncio-mode=auto -v --ignore=tests/modes/test_strict_mode.py  # [win]
   requires:
     - pip
     - anyio
