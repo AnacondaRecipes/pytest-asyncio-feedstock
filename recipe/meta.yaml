@@ -20,11 +20,12 @@ requirements:
     - pip
     - setuptools >=77
     - setuptools_scm >=6.2
-    - tomli # [py<311]
+    - tomli  # [py<311]
   run:
     - python
-    - pytest >=8.2,<9
-    - typing-extensions >=4.12 # [py<310]
+    - backports-asyncio-runner >=1.1,<2  # [py<311]
+    - pytest >=8.2,<10
+    - typing-extensions >=4.12  # [py<313]
 
 # Skip the failing tests as they test behavior that changed in pytest 8.x
 {% set skip_test = [
