@@ -1,13 +1,15 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "1.4.0" %}
+{% set version = "1.4.1" %}
+{% set deselect_tests = " --deselect=tests/markers/test_class_scope.py::test_asyncio_mark_respects_the_loop_policy" %}
 
+# E   AssertionError: assert {'passed': 2, 'skipped': 0, 'failed': 0, 'errors': 0, 'xpassed': 0, 'xfailed': 0, 'warnings': 5} == {'passed': 2, 'skipped': 0, 'failed': 0, 'errors': 0, 'xpassed': 0, 'xfailed': 0, 'warnings': 4}
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
-  sha256: c6c0d2259945122819f171a32ecea2c349ead889ee28176caaf492143424be42
+  sha256: e8266eb094e5ee9ffdb2068c9836f33e209ea77a970eb846933d416b5602669b
 
 build:
   number: 0
@@ -20,15 +22,13 @@ requirements:
     - pip
     - setuptools >=77
     - setuptools_scm >=6.2
+    - setuptools-scm >=6.2
   run:
     - python
     - backports-asyncio-runner >=1.1,<2  # [py<311]
     - pytest >=8.4,<10
     - typing-extensions >=4.12  # [py<313]
-
-
-# E   AssertionError: assert {'passed': 2, 'skipped': 0, 'failed': 0, 'errors': 0, 'xpassed': 0, 'xfailed': 0, 'warnings': 5} == {'passed': 2, 'skipped': 0, 'failed': 0, 'errors': 0, 'xpassed': 0, 'xfailed': 0, 'warnings': 4}
-{% set deselect_tests = " --deselect=tests/markers/test_class_scope.py::test_asyncio_mark_respects_the_loop_policy" %}
+    - typing_extensions >=4.12  # [py<313]
 
 test:
   source_files:
@@ -43,7 +43,7 @@ test:
   commands:
     - pip check
     - python -c "import pytest_asyncio; assert pytest_asyncio.__version__ == '{{ version }}'"
-    - pytest -vv {{ deselect_tests }} # [not win]
+    - pytest -vv {{ deselect_tests }}  # [not win]
     - pytest --asyncio-mode=auto -v {{ deselect_tests }}  # [win]
 
 about:
