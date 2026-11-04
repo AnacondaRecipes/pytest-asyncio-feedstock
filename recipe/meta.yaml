@@ -44,7 +44,7 @@ test:
     - pip check
     - python -c "import pytest_asyncio; assert pytest_asyncio.__version__ == '{{ version }}'"
     - pytest -vv {{ deselect_tests }}  # [not win]
-    - pytest --asyncio-mode=auto -v {{ deselect_tests }}  # [win]
+    - pytest --asyncio-mode=auto -vv {{ deselect_tests }}  # [win]
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
