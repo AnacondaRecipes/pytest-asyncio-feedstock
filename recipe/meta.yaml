@@ -1,5 +1,5 @@
 {% set name = "pytest-asyncio" %}
-{% set version = "1.4.1.post1" %}
+{% set version = "1.5.0" %}
 
 package:
   name: {{ name }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
-  sha256: f582d9ea4a1c082195abe8bd29a1fe106aeb1cd435e3dad2d3bc2749935c36a2
+  sha256: 92c8fa83ca419fd0d4bd6a34df6520dae435841d3733c319343249492adf37f7
 
 build:
   number: 0
@@ -20,14 +20,12 @@ requirements:
     - pip
     - setuptools >=77
     - setuptools_scm >=6.2
+    - tomli >=1  # [py<311]
   run:
     - python
     - backports-asyncio-runner >=1.1,<2  # [py<311]
     - pytest >=8.4
     - typing-extensions >=4.12  # [py<313]
-
-# E   AssertionError: assert {'passed': 2, 'skipped': 0, 'failed': 0, 'errors': 0, 'xpassed': 0, 'xfailed': 0, 'warnings': 5} == {'passed': 2, 'skipped': 0, 'failed': 0, 'errors': 0, 'xpassed': 0, 'xfailed': 0, 'warnings': 4}
-{% set deselect_tests = " --deselect=tests/markers/test_class_scope.py::test_asyncio_mark_respects_the_loop_policy" %}
 
 test:
   source_files:
@@ -42,8 +40,8 @@ test:
   commands:
     - pip check
     - python -c "import pytest_asyncio; assert pytest_asyncio.__version__ == '{{ version }}'"
-    - pytest -vv {{ deselect_tests }}  # [not win]
-    - pytest --asyncio-mode=auto -vv {{ deselect_tests }}  # [win]
+    - pytest -vv  # [not win]
+    - pytest --asyncio-mode=auto -vv  # [win]
 
 about:
   home: https://github.com/pytest-dev/pytest-asyncio
