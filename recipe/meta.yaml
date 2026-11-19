@@ -20,6 +20,7 @@ requirements:
     - pip
     - setuptools >=77
     - setuptools_scm >=6.2
+    - tomli >=1  # [py<311]
   run:
     - python
     - backports-asyncio-runner >=1.1,<2  # [py<311]
